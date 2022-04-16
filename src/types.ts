@@ -1,8 +1,8 @@
-export type Functor<T> = {
-  x: T,
-  fold: (f: Function) => T,
-  map: (f: (a: T) => T) => Functor<T>
-  of: (value: T) => Functor<T>
+export type Functor<A> = {
+  x: A,
+  fold: <B>(f: Function) => B,
+  map: (f: (a: A) => A) => Functor<A>
+  of: (value: A) => Functor<A>
 }
 
 export type ReduxAction<A> = {

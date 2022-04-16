@@ -1,4 +1,3 @@
-import identity from 'lodash/identity'
 import cond from 'lodash/fp/cond'
 import curry from 'lodash/fp/curry'
 import eq from 'lodash/fp/eq'
@@ -15,13 +14,23 @@ const DuxBox = <T>(value: T) => ({
   of: (newValue: T) => DuxBox(newValue)
 })
 
-export const fold = (f: Function) => (x: Functor<any>) => x.fold(f)
-export const read = (key: string) => flow(get(key), fold(identity))
+export const identity = <A>(A: A) => A
+export const fold = <A, B>(f: (a: A) => B) => (x: Functor<A>) => x.fold<B>(f)
+export const read = <A>(key: string) =>
+  (reduxState: { [key: string]: Functor<A>}) => 
+  fold<A, A>(identity)(reduxState[key])
 
 // action factory
-const buildAction = curry((key: string, type: string) => `${key} 🚀 ${type}`)
-const setAction = (key: string) => buildAction(key, 'SET')
-const mapAction = (key: string) => buildAction(key, 'MAP')
+const actionType = curry((key: string, type: string) => `${key} 🚀 ${type}`)
+const setAction = (key: string) => actionType(key, 'SET')
+const mapAction = (key: string) => actionType(key, 'MAP')
+
+export const action =
+  <T>(key: string, meta?: string) =>
+  (payload: T | ((a: T) => T)) =>
+    typeof payload === 'function'
+      ? ({ type: mapAction(key), payload, meta })
+      : ({ type: setAction(key), payload, meta })
 
 // action predicates
 const shouldMap = (key: string) => flow(get('type'), eq(mapAction(key)))
@@ -42,7 +51,7 @@ const setState =
 // one reducer to rule them all and in the darkness bind them
 export const createReducer =
   <T>(key: string, initial: T) =>
-  (currentState: Functor<T>, action: any) => {
+  (currentState: Functor<T>, action: ReduxAction<T>) => {
   const state = currentState ?? DuxBox(initial)
   return cond([
     [shouldMap(key), mapState(state)],
@@ -50,10 +59,3 @@ export const createReducer =
     [otherwise, () => state]
   ])(action)
 }
-
-export const action =
-  <T>(key: string) =>
-  (payload: T | ((a: T) => T)) =>
-    typeof payload === 'function'
-      ? ({ type: mapAction(key), payload })
-      : ({ type: setAction(key), payload })
