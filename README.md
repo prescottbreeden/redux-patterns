@@ -8,48 +8,55 @@ code that is more unified and consistent accross different teams.
 
 ## Take only what you need to survive...
 
-### `Action.of :: Key -> T -> T`
-Takes key and new state replaces existing state with a new state
+### create 1 of 2 different action types
 
-### `Action.map :: Key -> (T -> T) -> T`
-Takes a key and function and applies it to the current state
+#### `action :: Key -> (T -> T) | T`
+Takes key and a payload that is either a new state or a function that returns a
+new state
 
-### src/redux/redux.utils.ts
-
-```tsx
-// action factory
-const buildAction = curry((key: string, type: string) => `${key} 🚀 ${type}`)
-const updateAction = (key: string) => buildAction(key, 'UPDATE')
-const mapAction = (key: string) => buildAction(key, 'MAP')
-
-// action predicates
-const shouldUpdate = (key: string) => flow(read('type'), eq(updateAction(key)))
-const shouldMap = (key: string) => flow(read('type'), eq(mapAction(key)))
-
-// state transformation
-const updateState =
-  <T>(state: T) =>
-  (action: any) =>
-    flow(read('payload'), merge(state))(action)
-
-const mapState =
-  <T>(state: T) =>
-  (action: any) =>
-    flow(read('payload'), applyTo(state))(action)
-
-// one reducer to rule them all and in the darkness bind them
-export const createReducer =
-  <T>(key: string, initial: T) =>
-  (currentState: T, action: any) => {
-    const state = currentState ?? initial
-    return cond([
-      [shouldUpdate(key), updateState(state)],
-      [shouldMap(key), mapState(state)],
-      [otherwise, () => state],
-    ])(action)
-  }
-
+```ts
 export const action =
   <T>(key: string) =>
   (payload: T | ((a: T) => T)) =>
-    ({ type: mapAction(key), payload })
+    typeof payload === 'function'
+      ? ({ type: mapAction(key), payload })
+      : ({ type: setAction(key), payload })
+
+```
+
+### create slice on store
+```ts
+import * as Keys from './_keys'
+import { combineReducers } from 'redux'
+
+const rootReducer = combineReducers({
+  [Keys.COUNTER_KEY]: createReducer(Keys.COUNTER_KEY, 0),
+})
+```
+
+### consume in component
+```tsx
+import flow from 'lodash/fp/flow'
+import { useDispatch, useSelector } from 'react-redux'
+import { COUNTER_KEY } from './redux/_keys'
+
+function App() {
+  const dispatch = useDispatch()
+  const count: number = useSelector(read(COUNTER_KEY))
+
+  const setCounter = flow(action<number>(COUNTER_KEY), dispatch)
+
+  return (
+    <>
+      <div className="App">
+        <p>Obligatory Counter: {count}</p>
+        <button onClick={() => setCounter(subtract(1))}>Dec</button>
+        <button onClick={() => setCounter(add(1))}>Inc</button>
+        <button onClick={() => setCounter(0)}>Reset Count</button>
+      </div>
+    </>
+  )
+}
+
+```
+
