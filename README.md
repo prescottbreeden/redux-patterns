@@ -144,15 +144,20 @@ assert.
 
 ### What do we gain
 
-- Composable business logic is guaranteed
+- Composable business logic is guaranteed.
 - Complex business logic is more naturally broken down into numerous unit tests
-- Redux testing is more conducive to integration tests than unit tests to avoid
-  inadvertantly testing the implementation details of the Redux library
-- More concise code means less ceremony and less realestate for bugs
+- Redux testing is more conducive to integration tests than unit tests. It is
+  easy to write a unit test asserting a mock after an action is received. The
+  problem is that we still haven't tested what Redux is responsible for doing
+  which is ensuring messages are executed on specfic events. This is best done
+  through integration and e2e testing.
+- More concise code means less ceremony and less realestate for bugs.
 - Timeline walking in DevTools displays the function that accompanied the
-  messages allowing for linear debugging
+  messages allowing for linear debugging. While large functions are noisy, this
+  noise encourages breaking down functions into smaller units for cleaner
+  logging.
 - Action types/messages are generated based on payload to create another layer
-  of debugging
+  of debugging.
 - Redux state is locked inside an immutable data structure preventing quick
   hacky attempts of solving a challenge/requirement with room to provide
   additional safeguards as desired. Trapping anti-patterns with data structures
@@ -160,9 +165,9 @@ assert.
 
 ### What doesn't change
 
-- Any component can manipualte redux state by dispatching actions
+- Any component can manipualte redux state by dispatching actions.
 - Middleware can still be used but redux middleware thrives on unique messages
-  so a little more thoughtfulness has to be employed with type/payload analysis
+  so a little more thoughtfulness has to be employed with type/payload analysis.
 
 ### Is this better than a Singleton?
 
