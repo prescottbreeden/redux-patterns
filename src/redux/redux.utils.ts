@@ -6,13 +6,22 @@ import get from 'lodash/fp/get'
 import otherwise from 'lodash/fp/stubTrue'
 import { Functor, ReduxAction } from '../types'
 
-// it doesn't quack unfortunately
-const DuxBox = <T>(value: T) => ({
-  value,
-  fold: (f: Function) => f(value),
-  map: (f: (a: T) => T) => DuxBox(f(value)),
-  of: (newValue: T) => DuxBox(newValue),
-})
+const deepFreeze = (obj: any) => {
+  Object.keys(obj).forEach((prop) => {
+    if (typeof obj[prop] === 'object' && !Object.isFrozen(obj[prop]))
+      deepFreeze(obj[prop])
+  })
+  return Object.freeze(obj)
+}
+
+// Frozen Identity Functor
+const DuxBox = <T>(value: T) =>
+  deepFreeze({
+    value,
+    fold: (f: Function) => f(value),
+    map: (f: (a: T) => T) => DuxBox(f(value)),
+    of: (newValue: T) => DuxBox(newValue),
+  })
 
 export const identity = <A>(A: A) => A
 export const fold =

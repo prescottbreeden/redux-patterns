@@ -3,8 +3,8 @@ import flow from 'lodash/fp/flow'
 import type { Item } from '../types'
 import { SHOPPING_CART } from '../redux/_keys'
 import { action } from '../redux/redux.utils'
-import { useDispatch } from 'react-redux'
 import { updateCart } from '../utilities/shoppingCart.utils'
+import { useDispatch } from 'react-redux'
 
 // [ Requirements ]
 // - Users can add/remove multiple items from their shopping cart while reviewing

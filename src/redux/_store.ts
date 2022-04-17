@@ -9,7 +9,6 @@ import { MERCH } from '../dummyData'
 const rootReducer = combineReducers({
   [Keys.MERCHANDISE]: createReducer(Keys.MERCHANDISE, MERCH),
   [Keys.SHOPPING_CART]: createReducer(Keys.SHOPPING_CART, shoppingCart()),
-  [Keys.SIDEBAR]: createReducer(Keys.SIDEBAR, true),
 })
 
 const middleware: [] = []

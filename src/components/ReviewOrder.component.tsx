@@ -1,10 +1,10 @@
 import flow from 'lodash/fp/flow'
+import { ReviewItem } from './ReviewItem.component'
 import { SHOPPING_CART } from '../redux/_keys'
 import { action, read } from '../redux/redux.utils'
 import { add } from 'lodash'
 import { shoppingCart, ShoppingCart } from '../types'
 import { useDispatch, useSelector } from 'react-redux'
-import { ReviewItem } from './ReviewItem.component'
 
 // [ Requirements ]
 // - Users can see items in their shopping cart
@@ -15,13 +15,13 @@ import { ReviewItem } from './ReviewItem.component'
 // clicking "checkout." Because we did not couple our business logic to our
 // state management. All we have to do is remove the dispatch logic from the
 // ReviewItem components and pass on onChange handler to store the state
-// locally in the SideBar until they decide to save or checkout. All the
+// locally in the ReviewOrder until they decide to save or checkout. All the
 // business logic in our utilites are imported this function and GG.
 
-export const SideBar = () => {
+export const ReviewOrder = () => {
   const dispatch = useDispatch()
   const clearShoppingCart = flow(
-    action(SHOPPING_CART, 'SideBar::clearShoppingCart'),
+    action(SHOPPING_CART, 'ReviewOrder::clearShoppingCart'),
     dispatch
   )
   const { items, shipping, subtotal, taxes } = useSelector(
@@ -31,7 +31,7 @@ export const SideBar = () => {
   const handleCheckout = () => {
     setTimeout(() => {
       // submit shopping cart to API, on success clear shopping cart
-      clearShoppingCart(shoppingCart)
+      clearShoppingCart(shoppingCart())
     }, 100)
   }
 
@@ -61,7 +61,7 @@ export const SideBar = () => {
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <button onClick={handleCheckout}>Clear Shopping Cart</button>
-        <button>Checkout</button>
+        <button onClick={handleCheckout}>Checkout</button>
       </div>
     </div>
   )
