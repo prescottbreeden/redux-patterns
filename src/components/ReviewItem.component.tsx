@@ -3,7 +3,7 @@ import flow from 'lodash/fp/flow'
 import type { Item } from '../types'
 import { SHOPPING_CART } from '../redux/_keys'
 import { action } from '../redux/redux.utils'
-import { updateCart } from '../utilities/shoppingCart.utils'
+import { updateCart } from '../domain/shoppingCart.logic'
 import { useDispatch } from 'react-redux'
 
 // [ Requirements ]
@@ -46,10 +46,11 @@ export const ReviewItem = (item: Item) => {
       <p>Quantity: {item.quantity}</p>
       <button onClick={() => handleUpdate(-adjustment)}>Remove</button>
       <input
-        type="number"
-        style={{ width: '3rem' }}
-        value={adjustment}
+        min={0}
         onChange={({ target }) => setAdjustment(Number(target.value))}
+        style={{ width: '3rem' }}
+        type="number"
+        value={adjustment}
       />
       <button onClick={() => handleUpdate(adjustment)}>Add</button>
     </div>

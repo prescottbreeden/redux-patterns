@@ -3,7 +3,7 @@ import { Item, ShoppingCart } from '../types'
 import { SHOPPING_CART } from '../redux/_keys'
 import { action, read } from '../redux/redux.utils'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateCart } from '../utilities/shoppingCart.utils'
+import { updateCart } from '../domain/shoppingCart.logic'
 
 // [ Requirements ]
 // - Users can add items to their shopping cart
