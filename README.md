@@ -154,8 +154,8 @@ assert.
 - More concise code means less ceremony and less realestate for bugs.
 - Timeline walking in DevTools displays the function that accompanied the
   messages allowing for linear debugging. While large functions are noisy, this
-  noise encourages breaking down functions into smaller units for cleaner
-  logging.
+  noise encourages breaking down functions into smaller declarative units for 
+  cleaner logging.
 - Action types/messages are generated based on payload to create another layer
   of debugging.
 - Redux state is locked inside an immutable data structure preventing quick
