@@ -25,11 +25,11 @@ const updateQuantity =
   (cart: ShoppingCart): ShoppingCart => {
     // check if the item is in list and update accordingly
     const items = cart.items.find(({ id }) => id === item.id)
-      ? cart.items.map((cartItem) =>
-          item.id === cartItem.id
+      ? cart.items.map((cartItem) => {
+          return item.id === cartItem.id
             ? { ...cartItem, quantity: cartItem.quantity + quantity }
             : cartItem
-        )
+        })
       : [...cart.items, { ...item, quantity: quantity }]
 
     return { ...cart, items }

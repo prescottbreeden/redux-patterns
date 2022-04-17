@@ -27,6 +27,7 @@ export const ReviewItem = (item: Item) => {
   )
 
   const handleUpdate = (quantity: number) => {
+    // this logic should go in logic.ts but I got lazy
     if (item.quantity + quantity >= 0) {
       updateCartItem({ item, quantity })
     }

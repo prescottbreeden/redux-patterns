@@ -1,36 +1,35 @@
 export type Functor<A> = {
-  x: A,
-  fold: <B>(f: Function) => B,
+  x: A
+  fold: <B>(f: Function) => B
   map: (f: (a: A) => A) => Functor<A>
   of: (value: A) => Functor<A>
 }
 
 export type ReduxAction<A> = {
-  type: string,
+  type: string
   payload: (a: A) => A | A
 }
 
 export type Item = {
-  id: string;
-  name: string;
+  id: string
+  name: string
   price: number
   quantity: number
 }
 export const item = () => ({
-  id: "",
-  name: "",
+  id: '',
+  name: '',
   price: 0,
-  quantity: 0
+  quantity: 0,
 })
 
 export type ShoppingCart = {
-  items: Item[];
-  subtotal: number;
-  taxes: number;
-  shipping: number;
-
+  items: Item[]
+  subtotal: number
+  taxes: number
+  shipping: number
 }
-export const shoppingCart = () => ({
+export const shoppingCart = (): ShoppingCart => ({
   items: [],
   shipping: 0,
   subtotal: 0,

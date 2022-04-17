@@ -1,4 +1,5 @@
 # KISS Redux Pattern
+
 The following example outlines a basic counter for quick groking; however, since
 counters lack all the complexity that comes with the challenges of implementing
 real world applications, the repo is setup with a shopping cart that has complex
@@ -170,7 +171,7 @@ assert.
 - More concise code means less ceremony and less realestate for bugs.
 - Timeline walking in DevTools displays the function that accompanied the
   messages allowing for linear debugging. While large functions are noisy, this
-  noise encourages breaking down functions into smaller declarative units for 
+  noise encourages breaking down functions into smaller declarative units for
   cleaner logging.
 - Action types/messages are generated based on payload to create another layer
   of debugging.
