@@ -9,3 +9,30 @@ export type ReduxAction<A> = {
   type: string,
   payload: (a: A) => A | A
 }
+
+export type Item = {
+  id: string;
+  name: string;
+  price: number
+  quantity: number
+}
+export const item = () => ({
+  id: "",
+  name: "",
+  price: 0,
+  quantity: 0
+})
+
+export type ShoppingCart = {
+  items: Item[];
+  subtotal: number;
+  taxes: number;
+  shipping: number;
+
+}
+export const shoppingCart = () => ({
+  items: [],
+  shipping: 0,
+  subtotal: 0,
+  taxes: 0,
+})

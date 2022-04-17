@@ -1,3 +1,4 @@
 // redux keys
-export const COUNTER_KEY = '[COUNTER]'
-export const OPINION_KEY = '[OPINION]'
+export const SHOPPING_CART = '[SHOPPING_CART]'
+export const SIDEBAR = '[SIDEBAR]'
+export const MERCHANDISE = '[MERCHANDISE]'

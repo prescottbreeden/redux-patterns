@@ -2,15 +2,17 @@ import * as Keys from './_keys'
 import flow from 'lodash/fp/flow'
 import { ReduxDevTools } from './ReduxDevTools'
 import { combineReducers, applyMiddleware, createStore } from 'redux'
-import { counterMiddleware } from './middleware/counter.middleware'
 import { createReducer } from './redux.utils'
+import { shoppingCart } from '../types'
+import { MERCH } from '../dummyData'
 
 const rootReducer = combineReducers({
-  [Keys.COUNTER_KEY]: createReducer(Keys.COUNTER_KEY, 0),
-  [Keys.OPINION_KEY]: createReducer(Keys.OPINION_KEY, false),
+  [Keys.MERCHANDISE]: createReducer(Keys.MERCHANDISE, MERCH),
+  [Keys.SHOPPING_CART]: createReducer(Keys.SHOPPING_CART, shoppingCart()),
+  [Keys.SIDEBAR]: createReducer(Keys.SIDEBAR, true),
 })
 
-const middleware: any = [counterMiddleware]
+const middleware: [] = []
 
 // ReduxDevTools
 // CTRL-h to toggle redux devtools
