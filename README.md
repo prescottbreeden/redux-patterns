@@ -1,4 +1,11 @@
 # KISS Redux Pattern
+The following example outlines a basic counter for quick groking; however, since
+counters lack all the complexity that comes with the challenges of implementing
+real world applications, the repo is setup with a shopping cart that has complex
+state updates. See comments around `[Requirements]` and `[New Feautre Request]`
+to better understand the benefits of a pattern like this. The example below is
+followed by a discussion challenging some of our preconceptions about Redux and
+uses Redux documentation to try and avoid strawmans arguments.
 
 ## Useful abstractions have strong limitations
 
