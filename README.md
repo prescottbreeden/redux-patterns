@@ -37,12 +37,21 @@ const rootReducer = combineReducers({
 })
 ```
 
+### define business logic layer
+
+```ts
+// counter.logic.ts
+export const increment = add(1)
+export const decrement = subtract(1)
+```
+
 ### consume in component
 
 ```tsx
 import flow from 'lodash/fp/flow'
-import { useDispatch, useSelector } from 'react-redux'
 import { COUNTER_KEY } from './redux/_keys'
+import { decrement, increment } from './counter.logic'
+import { useDispatch, useSelector } from 'react-redux'
 
 function App() {
   const dispatch = useDispatch()
@@ -53,8 +62,8 @@ function App() {
     <>
       <div className="App">
         <p>Obligatory Counter: {count}</p>
-        <button onClick={() => setCounter(subtract(1))}>Dec</button>
-        <button onClick={() => setCounter(add(1))}>Inc</button>
+        <button onClick={() => setCounter(decrement)}>Dec</button>
+        <button onClick={() => setCounter(increment)}>Inc</button>
         <button onClick={() => setCounter(0)}>Reset Count</button>
       </div>
     </>
