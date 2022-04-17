@@ -1,53 +1,36 @@
 import React from 'react'
 import flow from 'lodash/fp/flow'
-import type { Item, ShoppingCart } from '../types'
+import type { Item } from '../types'
 import { SHOPPING_CART } from '../redux/_keys'
 import { action } from '../redux/redux.utils'
 import { useDispatch } from 'react-redux'
+import { updateCart } from '../utilities/shoppingCart.utils'
 
-// interface ItemProps {}
-export const ReviewItem: React.FC<Item> = (props) => {
+// [ Requirements ]
+// - Users can add/remove multiple items from their shopping cart while reviewing
+// - Users cannot create negative cart quantities
+
+// [ New Feature Request ]
+// Users want to be able to undo changes they make to their cart before
+// clicking "checkout." Because we did not couple our business logic to our
+// state management. All we have to do is remove all our dispatch logic and
+// store changes in the parent component in a useState hook.
+
+export const ReviewItem = (item: Item) => {
   const [adjustment, setAdjustment] = React.useState<number>(1)
   const dispatch = useDispatch()
-  const updateQuantity = flow(
-    action(SHOPPING_CART, 'ReviewItem::updateQuantity'),
+
+  const updateCartItem = flow(
+    updateCart,
+    action(SHOPPING_CART, 'ReviewItem::updateCartItem'),
     dispatch
   )
 
-  /**
-   * Update an Item in cart by applying a function to it
-   */
-  const updateItem =
-    (modify: (item: Item) => Item) =>
-    (cart: ShoppingCart): ShoppingCart => ({
-      ...cart,
-      items: cart.items.map((item) =>
-        item.id === props.id ? modify(item) : item
-      ),
-    })
-
-  /**
-   * increase the quantity of an item in shopping cart by designated amount
-   */
-  const increaseItemQuantity =
-    (amount: number) =>
-    (item: Item): Item => ({
-      ...item,
-      quantity: item.quantity + amount,
-    })
-
-  /**
-   * decrease the quantity of an item in shopping cart by designated amount
-   */
-  const decreaseItemQuantity =
-    (amount: number) =>
-    (item: Item): Item => ({
-      ...item,
-      quantity: item.quantity - amount,
-    })
-
-  const addQuantity = flow(increaseItemQuantity, updateItem, updateQuantity)
-  const removeQuantity = flow(decreaseItemQuantity, updateItem, updateQuantity)
+  const handleUpdate = (quantity: number) => {
+    if (item.quantity + quantity >= 0) {
+      updateCartItem({ item, quantity })
+    }
+  }
 
   return (
     <div
@@ -58,17 +41,17 @@ export const ReviewItem: React.FC<Item> = (props) => {
         margin: '1rem',
       }}
     >
-      <p>Name: {props.name}</p>
-      <p>Cost: {props.price}</p>
-      <p>Quantity: {props.quantity}</p>
-      <button onClick={() => removeQuantity(adjustment)}>Remove</button>
+      <p>Name: {item.name}</p>
+      <p>Cost: {item.price}</p>
+      <p>Quantity: {item.quantity}</p>
+      <button onClick={() => handleUpdate(-adjustment)}>Remove</button>
       <input
         type="number"
         style={{ width: '3rem' }}
         value={adjustment}
         onChange={({ target }) => setAdjustment(Number(target.value))}
       />
-      <button onClick={() => addQuantity(adjustment)}>Add</button>
+      <button onClick={() => handleUpdate(adjustment)}>Add</button>
     </div>
   )
 }

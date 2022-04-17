@@ -1,15 +1,19 @@
-import React from 'react'
 import flow from 'lodash/fp/flow'
-import type { Item } from '../types'
+import { Item, ShoppingCart } from '../types'
 import { SHOPPING_CART } from '../redux/_keys'
-import { action } from '../redux/redux.utils'
-import { useDispatch } from 'react-redux'
+import { action, read } from '../redux/redux.utils'
+import { useDispatch, useSelector } from 'react-redux'
 import { updateCart } from '../utilities/shoppingCart.utils'
 
-// interface ItemProps {}
-export const ViewItem: React.FC<Item> = (props) => {
+// [ Requirements ]
+// - Users can add items to their shopping cart
+// - Shows a user how many items are remaining as they add items to their cart
+
+export const ViewItem = (item: Item) => {
   const dispatch = useDispatch()
   const addToCart = flow(action(SHOPPING_CART, 'ViewItem::addToCart'), dispatch)
+  const cart = useSelector(read<ShoppingCart>(SHOPPING_CART))
+  const itemInCart = cart.items.find(({ id }: Item) => item.id === id)
 
   return (
     <div
@@ -20,10 +24,13 @@ export const ViewItem: React.FC<Item> = (props) => {
         margin: '1rem',
       }}
     >
-      <p>Name: {props.name}</p>
-      <p>Cost: {props.price}</p>
-      <p>Quantity: {props.quantity}</p>
-      <button onClick={() => addToCart(updateCart(props))}>Add to Cart</button>
+      <p>
+        {item.name}: ${item.price}
+      </p>
+      <p>Remaining: {42 - (itemInCart ? itemInCart?.quantity : 0)}</p>
+      <button onClick={() => addToCart(updateCart({ item }))}>
+        Add to Cart
+      </button>
     </div>
   )
 }

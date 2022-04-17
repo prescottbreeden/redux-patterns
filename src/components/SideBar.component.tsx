@@ -1,4 +1,3 @@
-import React from 'react'
 import flow from 'lodash/fp/flow'
 import { SHOPPING_CART } from '../redux/_keys'
 import { action, read } from '../redux/redux.utils'
@@ -7,8 +6,19 @@ import { shoppingCart, ShoppingCart } from '../types'
 import { useDispatch, useSelector } from 'react-redux'
 import { ReviewItem } from './ReviewItem.component'
 
-interface SideBarProps {}
-export const SideBar: React.FC<SideBarProps> = () => {
+// [ Requirements ]
+// - Users can see items in their shopping cart
+// - Users can checkout and purchase the items in their cart
+
+// [ New Feature Request ]
+// Users want to be able to undo changes they make to their cart before
+// clicking "checkout." Because we did not couple our business logic to our
+// state management. All we have to do is remove the dispatch logic from the
+// ReviewItem components and pass on onChange handler to store the state
+// locally in the SideBar until they decide to save or checkout. All the
+// business logic in our utilites are imported this function and GG.
+
+export const SideBar = () => {
   const dispatch = useDispatch()
   const clearShoppingCart = flow(
     action(SHOPPING_CART, 'SideBar::clearShoppingCart'),
@@ -21,7 +31,7 @@ export const SideBar: React.FC<SideBarProps> = () => {
   const handleCheckout = () => {
     setTimeout(() => {
       // submit shopping cart to API, on success clear shopping cart
-      clearShoppingCart(shoppingCart())
+      clearShoppingCart(shoppingCart)
     }, 100)
   }
 
