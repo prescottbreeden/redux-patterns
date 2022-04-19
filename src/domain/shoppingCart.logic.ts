@@ -1,4 +1,5 @@
 import flow from 'lodash/fp/flow'
+import { identity } from '../redux/redux.utils'
 import type { Item, ShoppingCart } from '../types'
 import { add } from '../utilities/math.utils'
 
@@ -55,13 +56,15 @@ const updateTotals =
  * item is already in the cart, it will increment the quantity of that item
  * instead of duplicating the item in the cart.
  */
-export const updateCart =
-  ({ item, quantity = 1 }: EditCartItem) =>
-  (cart: ShoppingCart): ShoppingCart =>
+export const updateCart = ({ item, quantity = 1 }: EditCartItem) => {
+  if (item.quantity + quantity < 0) return identity
+  const _updateCart = (cart: ShoppingCart): ShoppingCart =>
     flow(
       updateTotals({ item, quantity }),
       updateQuantity({ item, quantity })
     )(cart)
+  return _updateCart
+}
 
 // exported only for unit-testing
 export const test_only = {

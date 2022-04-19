@@ -1,10 +1,8 @@
 import React from 'react'
-import flow from 'lodash/fp/flow'
-import type { Item } from '../types'
+import { Item, ShoppingCart } from '../types'
 import { SHOPPING_CART } from '../redux/_keys'
-import { action } from '../redux/redux.utils'
 import { updateCart } from '../domain/shoppingCart.logic'
-import { useDispatch } from 'react-redux'
+import { useRedux } from '../redux/useRedux'
 
 // [ Requirements ]
 // - Users can add/remove multiple items from their shopping cart while reviewing
@@ -18,26 +16,17 @@ import { useDispatch } from 'react-redux'
 
 export const ReviewItem = (item: Item) => {
   const [adjustment, setAdjustment] = React.useState<number>(1)
-  const dispatch = useDispatch()
-
-  const updateCartItem = flow(
-    updateCart,
-    action(SHOPPING_CART, 'ReviewItem::updateCartItem'),
-    dispatch
-  )
+  const { dispatch } = useRedux<ShoppingCart>(SHOPPING_CART, 'ReviewItem')
 
   const handleUpdate = (quantity: number) => {
-    // this logic should go in logic.ts but I got lazy
-    if (item.quantity + quantity >= 0) {
-      updateCartItem({ item, quantity })
-    }
+    dispatch(updateCart({ item, quantity }), 'handleUpdate')
   }
 
   return (
     <div
       style={{
         border: '1px solid black',
-        width: '10rem',
+        width: '12rem',
         padding: '1rem',
         margin: '1rem',
       }}

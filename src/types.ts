@@ -5,9 +5,11 @@ export type Functor<A> = {
   of: (value: A) => Functor<A>
 }
 
+export type ReduxPayload<A> = (a: A) => A | A
+
 export type ReduxAction<A> = {
   type: string
-  payload: (a: A) => A | A
+  payload: ReduxPayload<A>
 }
 
 export type Item = {

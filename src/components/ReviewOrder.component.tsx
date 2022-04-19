@@ -1,10 +1,8 @@
-import flow from 'lodash/fp/flow'
 import { ReviewItem } from './ReviewItem.component'
 import { SHOPPING_CART } from '../redux/_keys'
-import { action, read } from '../redux/redux.utils'
 import { add } from 'lodash'
 import { shoppingCart, ShoppingCart } from '../types'
-import { useDispatch, useSelector } from 'react-redux'
+import { useRedux } from '../redux/useRedux'
 
 // [ Requirements ]
 // - Users can see items in their shopping cart
@@ -19,20 +17,19 @@ import { useDispatch, useSelector } from 'react-redux'
 // business logic in our utilites are imported this function and GG.
 
 export const ReviewOrder = () => {
-  const dispatch = useDispatch()
-  const clearShoppingCart = flow(
-    action(SHOPPING_CART, 'ReviewOrder::clearShoppingCart'),
-    dispatch
+  const { data, dispatch, pipe } = useRedux<ShoppingCart>(
+    SHOPPING_CART,
+    'ReviewOrder'
   )
-  const { items, shipping, subtotal, taxes } = useSelector(
-    read<ShoppingCart>(SHOPPING_CART)
-  )
+  const { items, shipping, subtotal, taxes } = data
 
+  // const handleCheckout = () => dispatch(shoppingCart)
   const handleCheckout = () => {
-    setTimeout(() => {
-      // submit shopping cart to API, on success clear shopping cart
-      clearShoppingCart(shoppingCart())
-    }, 100)
+    pipe(
+      (s: ShoppingCart) => s,
+      (s: ShoppingCart) => s,
+      () => shoppingCart()
+    )
   }
 
   return (

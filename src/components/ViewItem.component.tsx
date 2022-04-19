@@ -1,19 +1,16 @@
-import flow from 'lodash/fp/flow'
 import { Item, ShoppingCart } from '../types'
 import { SHOPPING_CART } from '../redux/_keys'
-import { action, read } from '../redux/redux.utils'
-import { useDispatch, useSelector } from 'react-redux'
 import { updateCart } from '../domain/shoppingCart.logic'
+import { useRedux } from '../redux/useRedux'
 
 // [ Requirements ]
 // - Users can add items to their shopping cart
 // - Shows a user how many items are remaining as they add items to their cart
 
 export const ViewItem = (item: Item) => {
-  const dispatch = useDispatch()
-  const addToCart = flow(action(SHOPPING_CART, 'ViewItem::addToCart'), dispatch)
-  const cart = useSelector(read<ShoppingCart>(SHOPPING_CART))
-  const itemInCart = cart.items.find(({ id }: Item) => item.id === id)
+  const { data, dispatch } = useRedux<ShoppingCart>(SHOPPING_CART, 'ViewItem')
+  const itemInCart = data.items.find(({ id }: Item) => item.id === id)
+  const addToCart = () => dispatch(updateCart({ item }))
 
   return (
     <div
@@ -28,9 +25,7 @@ export const ViewItem = (item: Item) => {
         {item.name}: ${item.price}
       </p>
       <p>Remaining: {42 - (itemInCart ? itemInCart?.quantity : 0)}</p>
-      <button onClick={() => addToCart(updateCart({ item }))}>
-        Add to Cart
-      </button>
+      <button onClick={addToCart}>Add to Cart</button>
     </div>
   )
 }
